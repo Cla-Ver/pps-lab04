@@ -25,4 +25,4 @@ class SchoolTest:
     assertEquals(Cons("Mario", Nil()), school.setTeacherToCourse(teacher, course).teachers)
 
   @Test def teachersShouldHaveSequenceOfTaughtCourses(): Unit =
-    assertEquals(Cons("PPS", Cons("Italian", Nil())), school.setTeacherToCourse(teacher, course).setTeacherToCourse(teacher, schoolModule.course("Italian")).coursesOfATeacher(teacher))
+    assertEquals(Cons("Italian", Cons("PPS", Nil())), school.setTeacherToCourse(teacher, course).setTeacherToCourse(teacher, schoolModule.course("Italian")).coursesOfATeacher(teacher))

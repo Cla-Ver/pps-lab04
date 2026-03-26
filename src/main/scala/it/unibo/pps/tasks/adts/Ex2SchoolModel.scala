@@ -113,25 +113,27 @@ object SchoolModel:
       def hasCourse(name: String): Boolean
   object BasicSchoolModule extends SchoolModule:
 
-    case class courseImpl(name: String)
+    //case class courseImpl(name: String)
     case class teacherImpl(name: String, courses: Sequence[Course])
     case class schoolImpl(courses: Sequence[Course], teachers: Sequence[Teacher])
     
     override type School = schoolImpl
     override type Teacher = teacherImpl
-    override type Course = courseImpl
+    override type Course = String
 
     def teacher(name: String): Teacher = teacherImpl(name, Nil())
-    def course(name: String): Course = courseImpl(name)
+    def course(name: String): Course = name
     def emptySchool: School = schoolImpl(Nil(), Nil())
 
     extension (school: School)
-      def courses: Sequence[String] = school.courses.map(course => course.name)
+      def courses: Sequence[String] = school.courses
       def teachers: Sequence[String] = school.teachers.map(teacher => teacher.name)
       def setTeacherToCourse(teacher: Teacher, course: Course): School = school.teachers.filter(t => t.name == teacher.name) match
-        case Cons(h, _) => schoolImpl(Cons(course, school.courses.filter(c => c.name != course.name)), Cons(teacherImpl(teacher.name, Cons(course, h.courses)), school.teachers.filter(t => t.name != teacher.name)))
-        case _ => schoolImpl(Cons(course, school.courses.filter(c => c.name != course.name)), Cons(teacherImpl(teacher.name, Cons(course, Nil())), school.teachers))
-      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???//school.teachers.filter(t => t.name == teacher.name).map(t => t.courses)
+        case Cons(h, _) => schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, h.courses)), school.teachers.filter(t => t.name != teacher.name)))
+        case _ => schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, Nil())), school.teachers))
+      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.teachers.filter(t => t.name == teacher.name) match
+        case Cons(h, t) => h.courses
+        case _ => Nil()
       def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
         case Cons(_, _) => true
         case _ => false
