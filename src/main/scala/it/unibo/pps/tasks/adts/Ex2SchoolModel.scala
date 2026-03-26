@@ -127,7 +127,7 @@ object SchoolModel:
 
     extension (school: School)
       def courses: Sequence[String] = school.courses.map(course => course.name)
-      def teachers: Sequence[String] = ???
+      def teachers: Sequence[String] = school.teacher.map(teacher => teacher.name)
       def setTeacherToCourse(teacher: teacherImpl, course: Course): schoolImpl = ???
       def coursesOfATeacher(teacher: teacherImpl): Sequence[Course] = ???
       def hasTeacher(name: String): Boolean = ???
