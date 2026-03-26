@@ -115,7 +115,7 @@ object SchoolModel:
 
     case class courseImpl(name: String)
     case class teacherImpl(name: String, courses: Sequence[Course])
-    case class schoolImpl(courses: Sequence[Course], teachers: Sequence[teacherImpl])
+    case class schoolImpl(courses: Sequence[Course], teachers: Sequence[Teacher])
     
     override type School = schoolImpl
     override type Teacher = teacherImpl
@@ -128,9 +128,13 @@ object SchoolModel:
     extension (school: School)
       def courses: Sequence[String] = school.courses.map(course => course.name)
       def teachers: Sequence[String] = school.teachers.map(teacher => teacher.name)
-      def setTeacherToCourse(teacher: Teacher, course: Course): schoolImpl = schoolImpl(Cons(course, school.courses), Cons(teacher, school.teachers))
-      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???
-      def hasTeacher(name: String): Boolean = ???
+      def setTeacherToCourse(teacher: Teacher, course: Course): School = school.teachers.filter(t => t.name == teacher.name) match
+        case Cons(h, _) => schoolImpl(Cons(course, school.courses.filter(c => c.name != course.name)), Cons(teacherImpl(teacher.name, Cons(course, h.courses)), school.teachers.filter(t => t.name != teacher.name)))
+        case _ => schoolImpl(Cons(course, school.courses.filter(c => c.name != course.name)), Cons(teacherImpl(teacher.name, Cons(course, Nil())), school.teachers))
+      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???//school.teachers.filter(t => t.name == teacher.name).map(t => t.courses)
+      def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
+        case Cons(_, _) => true
+        case _ => false
       def hasCourse(name: String): Boolean = ???
 @main def examples(): Unit =
   import SchoolModel.BasicSchoolModule.*
