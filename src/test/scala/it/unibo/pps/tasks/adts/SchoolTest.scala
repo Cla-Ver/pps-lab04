@@ -8,10 +8,15 @@ import it.unibo.pps.u03.extensionmethods.Sequences.Sequence, Sequence.*
 class SchoolTest:
   val schoolModule: SchoolModule = BasicSchoolModule
   import schoolModule.*
-  val emptySchool: School = schoolModule.emptySchool
+  val school: School = schoolModule.emptySchool
+  val course: Course = schoolModule.course("PPS")
+  val teacher: Teacher = schoolModule.teacher("Mario")
 
   @Test def emptySchoolShouldHaveNoCourses(): Unit =
-    assertEquals(Nil(), emptySchool.courses)
+    assertEquals(Nil(), school.courses)
 
   @Test def emptySchoolShouldHaveNoTeachers(): Unit =
-    assertEquals(Nil(), emptySchool.teachers)
+    assertEquals(Nil(), school.teachers)
+
+  @Test def schoolShouldHaveCourseAfterAdding(): Unit =
+    assertEquals(Cons("PPS", Nil()), school.setTeacherToCourse(teacher, course).courses)
