@@ -20,3 +20,6 @@ class SchoolTest:
 
   @Test def schoolShouldHaveCourseAfterAdding(): Unit =
     assertEquals(Cons("PPS", Nil()), school.setTeacherToCourse(teacher, course).courses)
+
+  @Test def schoolShouldHaveTeachersAfterAdding(): Unit =
+    assertEquals(Cons("Mario", Nil()), school.setTeacherToCourse(teacher, course).teachers)
