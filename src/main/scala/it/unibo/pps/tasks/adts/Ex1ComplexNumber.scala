@@ -30,10 +30,7 @@ object Ex1ComplexNumbers:
       def sum(other: Complex): Complex = complexNumber(complex.real + other.real, complex.imaginary + other.imaginary)
       def subtract(other: Complex): Complex = complexNumber(complex.real - other.real, complex.imaginary - other.imaginary)
       def asString(): String = (complex.real, complex.imaginary) match
-        case (r, i) if r != 0 && i > 0 => r.toString() + " + " + math.abs(i) + "i"
-        case (r, i) if r != 0 && i < 0 => r.toString() + " - " + math.abs(i) + "i"
-        case (r, i) if r == 0 && i != 0 => i.toString() + "i"
-        case _ => complex.real.toString()
-/*case (r, i) if n > 0 => complex.real.toString() + " + " + math.abs(n) + "i"
-case n if n < 0 => complex.real.toString() + " - " + math.abs(n) + "i"
-case _ => complex.real.toString()*/
+        case (r, i) if r != 0 && i > 0 => r.toString + " + " + math.abs(i) + "i"
+        case (r, i) if r != 0 && i < 0 => r.toString + " - " + math.abs(i) + "i"
+        case (r, i) if r == 0 && i != 0 => i.toString + "i"
+        case _ => complex.real.toString
