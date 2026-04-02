@@ -2,8 +2,9 @@ package it.unibo.pps.tasks.adts
 
 import it.unibo.pps.tasks.adts.SchoolModel.{BasicSchoolModule, SchoolModule}
 import org.junit.Test
-import org.junit.Assert.assertEquals
-import it.unibo.pps.u03.extensionmethods.Sequences.Sequence, Sequence.*
+import org.junit.Assert.{assertEquals, assertTrue}
+import it.unibo.pps.u03.extensionmethods.Sequences.Sequence
+import Sequence.*
 
 class SchoolTest:
   val schoolModule: SchoolModule = BasicSchoolModule
@@ -26,3 +27,6 @@ class SchoolTest:
 
   @Test def teachersShouldHaveSequenceOfTaughtCourses(): Unit =
     assertEquals(Cons("Italian", Cons("PPS", Nil())), school.setTeacherToCourse(teacher, course).setTeacherToCourse(teacher, schoolModule.course("Italian")).coursesOfATeacher(teacher))
+    
+  @Test def schoolShouldReturnTrueOnSearchExistingCourse(): Unit =
+    assertTrue(school.setTeacherToCourse(teacher, course).hasCourse("PPS"))

@@ -1,6 +1,9 @@
 package it.unibo.pps.tasks.adts
 
-import it.unibo.pps.u03.extensionmethods.Sequences.Sequence, Sequence.*
+import it.unibo.pps.u03.extensionmethods.Sequences.Sequence
+import Sequence.*
+
+import scala.annotation.tailrec
 
 /*  Exercise 2: 
  *  Implement the below trait, and write a meaningful test.
@@ -128,16 +131,22 @@ object SchoolModel:
     extension (school: School)
       def courses: Sequence[String] = school.courses
       def teachers: Sequence[String] = school.teachers.map(teacher => teacher.name)
-      def setTeacherToCourse(teacher: Teacher, course: Course): School = school.teachers.filter(t => t.name == teacher.name) match
-        case Cons(h, _) => schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, h.courses)), school.teachers.filter(t => t.name != teacher.name)))
-        case _ => schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, Nil())), school.teachers))
+      def setTeacherToCourse(teacher: Teacher, course: Course): School = schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, coursesOfATeacher(teacher))), school.teachers.filter(t => t.name != teacher.name)))
       def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.teachers.filter(t => t.name == teacher.name) match
         case Cons(h, t) => h.courses
         case _ => Nil()
       def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
         case Cons(_, _) => true
         case _ => false
-      def hasCourse(name: String): Boolean = ???
+      def hasCourse(name: String): Boolean =
+        @tailrec
+        def searchCourse(courseName: String, courses: Sequence[Course]): Boolean = courses match
+          case Cons(h, t) if h == courseName => true
+          case Cons(_, t) => searchCourse(courseName, t)
+          case _ => false
+
+        searchCourse(name, school.courses)
+
 @main def examples(): Unit =
   import SchoolModel.BasicSchoolModule.*
   val school = emptySchool
