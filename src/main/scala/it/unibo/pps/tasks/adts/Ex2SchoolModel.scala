@@ -133,7 +133,7 @@ object SchoolModel:
       def teachers: Sequence[String] = school.teachers.map(teacher => teacher.name)
       def setTeacherToCourse(teacher: Teacher, course: Course): School = schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, coursesOfATeacher(teacher))), school.teachers.filter(t => t.name != teacher.name)))
       def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.teachers.filter(t => t.name == teacher.name) match
-        case Cons(h, t) => h.courses
+        case Cons(h, _) => h.courses
         case _ => Nil()
       def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
         case Cons(_, _) => true
