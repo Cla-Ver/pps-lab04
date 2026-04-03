@@ -1,6 +1,7 @@
 package it.unibo.pps.tasks.typeclasses
 
 import it.unibo.pps.u03.Sequences.Sequence, Sequence.*
+import it.unibo.pps.u03.Optionals.Optional, Optional.*
 
 /*  Exercise 5: 
  *  - Generalise by ad-hoc polymorphism logAll, such that:
@@ -17,10 +18,27 @@ import it.unibo.pps.u03.Sequences.Sequence, Sequence.*
 
 object Ex5Traversable:
 
-  def log[A](a: A): Unit = println("The next element is: "+a)
+  //def log[A](a: A): Unit = println("The next element is: "+a)
 
-  def logAll[A](seq: Sequence[A]): Unit = seq match
-    case Cons(h, t) => log(h); logAll(t)
-    case _ => ()
+  def logAll[T[_]: Traversable, A](a: T[A]): Unit =
+    summon[Traversable[?]].log(a)
 
-  
+  trait Traversable[T[_]]:
+    def log[A](a: T[A]): Unit
+
+  given Traversable[Optional]:
+    override def log[A](a: Optional[A]): Unit = a match
+      case Just(a) => println(a)
+      case _ => ()
+
+  given Traversable[Sequence]:
+    override def log[A](a: Sequence[A]): Unit = a match
+      case Cons(h, t) => println("The next element is: " + h); log(t)
+      case _ => ()
+
+  @main def tryTraversable(): Unit =
+    val optional: Optional[Int] = Just(1)
+    logAll(optional)
+
+    val sequence: Sequence[Int] = Cons(1, Cons(2, Cons(3, Nil())))
+    logAll(sequence)
