@@ -138,14 +138,10 @@ object SchoolModel:
       def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
         case Cons(_, _) => true
         case _ => false
-      def hasCourse(name: String): Boolean =
-        @tailrec
-        def searchCourse(courseName: String, courses: Sequence[Course]): Boolean = courses match
-          case Cons(h, t) if h == courseName => true
-          case Cons(_, t) => searchCourse(courseName, t)
+      def hasCourse(name: String): Boolean = courses.filter(course => course == name) match
+          case Cons(_, _) => true
           case _ => false
 
-        searchCourse(name, school.courses)
 
 @main def examples(): Unit =
   import SchoolModel.BasicSchoolModule.*
