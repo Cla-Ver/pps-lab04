@@ -118,7 +118,7 @@ object SchoolModel:
 
     //case class courseImpl(name: String)
     case class teacherImpl(name: String, courses: Sequence[Course])
-    case class schoolImpl(courses: Sequence[Course], teachers: Sequence[Teacher])
+    case class schoolImpl(schoolCourses: Sequence[Course], schoolTeachers: Sequence[Teacher])
     
     override type School = schoolImpl
     override type Teacher = teacherImpl
@@ -128,14 +128,17 @@ object SchoolModel:
     def course(name: String): Course = name
     def emptySchool: School = schoolImpl(Nil(), Nil())
 
+
     extension (school: School)
-      def courses: Sequence[String] = school.courses
-      def teachers: Sequence[String] = school.teachers.map(teacher => teacher.name)
-      def setTeacherToCourse(teacher: Teacher, course: Course): School = schoolImpl(Cons(course, school.courses.filter(c => c != course)), Cons(teacherImpl(teacher.name, Cons(course, coursesOfATeacher(teacher))), school.teachers.filter(t => t.name != teacher.name)))
-      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.teachers.filter(t => t.name == teacher.name) match
+      def courses: Sequence[String] = school.schoolCourses
+      def teachers: Sequence[String] = school.schoolTeachers.map(teacher => teacher.name)
+      def setTeacherToCourse(teacher: Teacher, course: Course): School = schoolImpl(updateCourses(course), updateTeachers(teacher, course))
+      private def updateCourses(newCourse: Course) = Cons(newCourse, school.courses.filter(c => c != newCourse))
+      private def updateTeachers(teacher: Teacher, course: Course) = Cons(teacherImpl(teacher.name, Cons(course, coursesOfATeacher(teacher))), school.schoolTeachers.filter(t => t.name != teacher.name))
+      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.schoolTeachers.filter(t => t.name == teacher.name) match
         case Cons(h, _) => h.courses
         case _ => Nil()
-      def hasTeacher(name: String): Boolean = school.teachers.filter(t => t.name == name) match
+      def hasTeacher(name: String): Boolean = school.schoolTeachers.filter(t => t.name == name) match
         case Cons(_, _) => true
         case _ => false
       def hasCourse(name: String): Boolean = courses.filter(course => course == name) match
