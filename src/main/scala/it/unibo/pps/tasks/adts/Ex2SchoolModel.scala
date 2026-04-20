@@ -138,11 +138,13 @@ object SchoolModel:
       def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school.schoolTeachers.filter(t => t.name == teacher.name) match
         case Cons(h, _) => h.courses
         case _ => Nil()
-      def hasTeacher(name: String): Boolean = exists(name, school.schoolTeachers, teacher => teacher.name == name)
-      def hasCourse(name: String): Boolean = exists(name, courses, course => course == name)
+
       private def exists[A](name: String, listToScan: Sequence[A], filterClause: A => Boolean): Boolean = listToScan.filter(filterClause) match
         case Cons(_, _) => true
         case _ => false
+
+      def hasTeacher(name: String): Boolean = exists(name, school.schoolTeachers, teacher => teacher.name == name)
+      def hasCourse(name: String): Boolean = exists(name, courses, course => course == name)
 
 
 @main def examples(): Unit =
